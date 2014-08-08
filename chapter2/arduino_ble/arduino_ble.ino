@@ -1,5 +1,8 @@
 // Control Arduino board from BLE
 
+// Enable lightweight mode
+#define LIGHTWEIGHT 1
+
 // Libraries
 #include <SPI.h>
 #include "Adafruit_BLE_UART.h"
@@ -20,7 +23,7 @@ void setup(void)
 {  
   // Start Serial
   Serial.begin(9600);
-  Serial.println(F("Adafruit Bluefruit Low Energy nRF8001 Print echo demo"));
+  Serial.println(F("Adafruit Bluefruit Low Energy nRF8001"));
 
   // Start BLE
   BTLEserial.begin();
