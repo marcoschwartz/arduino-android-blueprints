@@ -19,37 +19,34 @@
             android:layout_width="113dp"
             android:layout_height="99dp"
             android:text="Light"
-
+            android:textColor="#4A90E2"
             android:textSize="20sp"
             android:id="@+id/lightButton"
             android:layout_gravity="center_horizontal|bottom"
-            <!--android:background="@drawable/buttonshape"-->
-            <!--android:textColor="#4A90E2"-->
+            android:background="@drawable/buttonshape"
             />
 
         <Button
             android:layout_width="113dp"
             android:layout_height="99dp"
             android:text="Humidity"
-
+            android:textColor="#4A90E2"
             android:textSize="20sp"
             android:id="@+id/humidityButton"
             android:layout_gravity="right|bottom"
-            <!--android:background="@drawable/buttonshape"-->
-            <!--android:textColor="#4A90E2"-->
+            android:background="@drawable/buttonshape"
             />
 
         <Button
             android:layout_width="113dp"
             android:layout_height="99dp"
             android:text="Temp."
-
+            android:textColor="#4A90E2"
             android:textSize="20sp"
             android:id="@+id/temperatureButton"
             android:layout_gravity="left|bottom"
             android:typeface="normal"
-            <!--android:background="@drawable/buttonshape"-->
-            <!--android:textColor="#4A90E2"-->
+            android:background="@drawable/buttonshape"
             />
 
         <TextView
@@ -69,10 +66,9 @@
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:id="@+id/dataOutputTextView"
             android:layout_gravity="center_vertical"
-            android:text="99"
-        <!--android:textSize="200dp"-->
-        <!--android:textColor="#4A90E2"-->
-        <!--android:gravity="center"-->
-        />
+            android:textSize="200dp"
+            android:textColor="#4A90E2"
+            android:gravity="center"
+            android:text="99" />
     </FrameLayout>
 </RelativeLayout>
