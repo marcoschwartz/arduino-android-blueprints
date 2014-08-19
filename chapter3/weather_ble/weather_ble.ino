@@ -1,5 +1,8 @@
 // Control Arduino board from BLE
 
+// Enable lightweight
+#define LIGHTWEIGHT 1
+
 // Libraries
 #include <SPI.h>
 #include "Adafruit_BLE_UART.h"
@@ -32,7 +35,7 @@ int light;
 void setup(void)
 {  
   // Start Serial
-  Serial.begin(115200);
+  Serial.begin(9600);
 
   // Start BLE
   BTLEserial.begin();
@@ -48,6 +51,9 @@ void setup(void)
   
    // Init DHT
   dht.begin();
+  
+  // Welcome message
+  Serial.println("Weather station started");
 }
 
 void loop() {  
