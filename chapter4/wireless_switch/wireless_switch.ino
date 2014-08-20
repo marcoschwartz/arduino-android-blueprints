@@ -52,7 +52,7 @@ void setup(void)
   pinMode(relay_pin,OUTPUT);
   
   // Calibrate sensor with null current
-  zero_sensor = getSensorValue(A5);
+  zero_sensor = getSensorValue(A0);
   Serial.println(zero_sensor);
    
   // Give name and ID to device
@@ -88,7 +88,7 @@ void setup(void)
 void loop() {
   
   // Perform power measurement
-  float sensor_value = getSensorValue(A5);
+  float sensor_value = getSensorValue(A0);
   Serial.println(sensor_value);
   wdt_reset();
     
