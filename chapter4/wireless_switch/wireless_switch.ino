@@ -3,7 +3,6 @@
 // Import required libraries
 #include <Adafruit_CC3000.h>
 #include <SPI.h>
-#include <CC3000_MDNS.h>
 #include <aREST.h>
 #include <avr/wdt.h>
 
@@ -37,9 +36,6 @@ aREST rest = aREST();
 
 // Server instance
 Adafruit_CC3000_Server restServer(LISTEN_PORT);
-
-// DNS responder instance
-MDNSResponder mdns;
 
 // Variables to be exposed to the API
 int power;
@@ -77,11 +73,6 @@ void setup(void)
     delay(100);
   }
   
-  // Start multicast DNS responder
-  if (!mdns.begin("arduino", cc3000)) {
-    while(1); 
-  }
-  
   // Display connection details
   displayConnectionDetails();
    
@@ -103,9 +94,6 @@ void loop() {
   amplitude_current = (float)(sensor_value-zero_sensor)/1024*5/185*1000000;
   effective_value = amplitude_current/1.414;
   power = (int)(abs(effective_value*effective_voltage/1000));
-  
-  // Handle any multicast DNS requests
-  mdns.update();
   
   // Handle REST calls
   Adafruit_CC3000_ClientRef client = restServer.available();
