@@ -5,6 +5,7 @@
 #include <SPI.h>
 #include <CC3000_MDNS.h>
 #include <aREST.h>
+#include <avr/wdt.h>
 
 // Relay state
 const int relay_pin = 8;
@@ -12,8 +13,7 @@ const int relay_pin = 8;
 // Define measurement variables
 float amplitude_current;
 float effective_value;
-float effective_voltage = 230; // Set voltage to 230V (Europe) or 110V (US)
-float effective_power;
+float effective_voltage = 230.; // Set voltage to 230V (Europe) or 110V (US)
 float zero_sensor;
 
 // These are the pins for the CC3000 chip if you are using a breakout board
@@ -28,7 +28,7 @@ Adafruit_CC3000 cc3000 = Adafruit_CC3000(ADAFRUIT_CC3000_CS, ADAFRUIT_CC3000_IRQ
 aREST rest = aREST();
 
 // Your WiFi SSID and password                                         
-#define WLAN_SSID       "yourWiFiNetworkName"
+#define WLAN_SSID       "yourSSID"
 #define WLAN_PASS       "yourPassword"
 #define WLAN_SECURITY   WLAN_SEC_WPA2
 
@@ -48,7 +48,7 @@ void setup(void)
 {  
   // Start Serial
   Serial.begin(115200);
-  
+ 
   // Init variables and expose them to REST API
   rest.variable("power",&power);
   
@@ -71,6 +71,7 @@ void setup(void)
   if (!cc3000.connectToAP(WLAN_SSID, WLAN_PASS, WLAN_SECURITY)) {
     while(1);
   }
+  
   while (!cc3000.checkDHCP())
   {
     delay(100);
@@ -87,18 +88,21 @@ void setup(void)
   // Start server
   restServer.begin();
   Serial.println(F("Listening for connections..."));
+  
+  // Enable watchdog
+  wdt_enable(WDTO_4S);
 }
 
 void loop() {
   
   // Perform power measurement
   float sensor_value = getSensorValue(A0);
+  wdt_reset();
     
   // Convert to current
   amplitude_current = (float)(sensor_value-zero_sensor)/1024*5/185*1000000;
   effective_value = amplitude_current/1.414;
-  effective_power = abs(effective_value*effective_voltage/1000);
-  power = (int)effective_power;
+  power = (int)(abs(effective_value*effective_voltage/1000));
   
   // Handle any multicast DNS requests
   mdns.update();
@@ -106,6 +110,11 @@ void loop() {
   // Handle REST calls
   Adafruit_CC3000_ClientRef client = restServer.available();
   rest.handle(client);
+  wdt_reset();
+  
+  // Check connection
+  if(!cc3000.checkConnected()){while(1){}}
+  wdt_reset();
   
 }
 
@@ -132,12 +141,12 @@ bool displayConnectionDetails(void)
 }
 
 // Get the reading from the current sensor
-float getSensorValue(int pin)
+float getSensorValue(uint8_t pin)
 {
-  int sensorValue;
+  uint16_t sensorValue;
   float avgSensor = 0;
-  int nb_measurements = 100;
-  for (int i = 0; i < nb_measurements; i++) {
+  uint8_t nb_measurements = 100;
+  for (uint8_t i = 0; i < nb_measurements; i++) {
     sensorValue = analogRead(pin);
     avgSensor = avgSensor + float(sensorValue);
   }	  
