@@ -52,7 +52,8 @@ void setup(void)
   pinMode(relay_pin,OUTPUT);
   
   // Calibrate sensor with null current
-  zero_sensor = getSensorValue(A0);
+  zero_sensor = getSensorValue(A5);
+  Serial.println(zero_sensor);
    
   // Give name and ID to device
   rest.set_id("001");
@@ -87,7 +88,8 @@ void setup(void)
 void loop() {
   
   // Perform power measurement
-  float sensor_value = getSensorValue(A0);
+  float sensor_value = getSensorValue(A5);
+  Serial.println(sensor_value);
   wdt_reset();
     
   // Convert to current
@@ -129,11 +131,11 @@ bool displayConnectionDetails(void)
 }
 
 // Get the reading from the current sensor
-float getSensorValue(uint8_t pin)
+float getSensorValue(int pin)
 {
-  uint16_t sensorValue;
+  int sensorValue;
   float avgSensor = 0;
-  uint8_t nb_measurements = 100;
+  int nb_measurements = 100;
   for (uint8_t i = 0; i < nb_measurements; i++) {
     sensorValue = analogRead(pin);
     avgSensor = avgSensor + float(sensorValue);
