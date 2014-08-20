@@ -14,6 +14,7 @@ float amplitude_current;
 float effective_value;
 float effective_voltage = 230.; // Set voltage to 230V (Europe) or 110V (US)
 float zero_sensor;
+float effective_power;
 
 // These are the pins for the CC3000 chip if you are using a breakout board
 #define ADAFRUIT_CC3000_IRQ   3
@@ -27,8 +28,8 @@ Adafruit_CC3000 cc3000 = Adafruit_CC3000(ADAFRUIT_CC3000_CS, ADAFRUIT_CC3000_IRQ
 aREST rest = aREST();
 
 // Your WiFi SSID and password                                         
-#define WLAN_SSID       "yourSSID"
-#define WLAN_PASS       "yourPassword"
+#define WLAN_SSID       "yourWiFiSSID"
+#define WLAN_PASS       "yourWiFiPassword"
 #define WLAN_SECURITY   WLAN_SEC_WPA2
 
 // The port to listen for incoming TCP connections 
@@ -53,7 +54,6 @@ void setup(void)
   
   // Calibrate sensor with null current
   zero_sensor = getSensorValue(A0);
-  Serial.println(zero_sensor);
    
   // Give name and ID to device
   rest.set_id("001");
@@ -89,18 +89,17 @@ void loop() {
   
   // Perform power measurement
   float sensor_value = getSensorValue(A0);
-  Serial.println(sensor_value);
   wdt_reset();
     
   // Convert to current
   amplitude_current = (float)(sensor_value-zero_sensor)/1024*5/185*1000000;
   effective_value = amplitude_current/1.414;
-  power = (int)(abs(effective_value*effective_voltage/1000));
+  effective_power = abs(effective_value*effective_voltage/1000.);
+  power = (int) effective_power;
   
   // Handle REST calls
   Adafruit_CC3000_ClientRef client = restServer.available();
   rest.handle(client);
-  wdt_reset();
   
   // Check connection
   if(!cc3000.checkConnected()){while(1){}}
