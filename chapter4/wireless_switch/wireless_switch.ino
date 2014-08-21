@@ -28,8 +28,8 @@ Adafruit_CC3000 cc3000 = Adafruit_CC3000(ADAFRUIT_CC3000_CS, ADAFRUIT_CC3000_IRQ
 aREST rest = aREST();
 
 // Your WiFi SSID and password                                         
-#define WLAN_SSID       "yourWiFiSSID"
-#define WLAN_PASS       "yourWiFiPassword"
+#define WLAN_SSID       "Stefangie Home"
+#define WLAN_PASS       "stefangie811"
 #define WLAN_SECURITY   WLAN_SEC_WPA2
 
 // The port to listen for incoming TCP connections 
@@ -96,6 +96,7 @@ void loop() {
   effective_value = amplitude_current/1.414;
   effective_power = abs(effective_value*effective_voltage/1000.);
   power = (int) effective_power;
+  //power = 29;
   
   // Handle REST calls
   Adafruit_CC3000_ClientRef client = restServer.available();

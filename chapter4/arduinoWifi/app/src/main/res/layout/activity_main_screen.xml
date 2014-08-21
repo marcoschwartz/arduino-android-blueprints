@@ -1,0 +1,57 @@
+<RelativeLayout
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Switch On"
+        android:id="@+id/switchOnButton"
+        android:layout_marginBottom="59dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignRight="@+id/openGateButton"
+        android:layout_alignEnd="@+id/openGateButton"
+        android:layout_marginRight="66dp" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Switch Off"
+        android:id="@+id/switchOffButton"
+        android:layout_toEndOf="@+id/switchOnButton"
+        android:layout_alignTop="@+id/switchOnButton"
+        android:layout_alignLeft="@+id/openGateButton"
+        android:layout_alignStart="@+id/openGateButton"
+        android:layout_marginLeft="75dp" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Check Power"
+        android:id="@+id/checkPowerButton"
+        android:layout_below="@+id/switchOffButton"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Hello Test"
+        android:id="@+id/powerOutput"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="157dp"
+        android:textAlignment="gravity"
+        android:layout_alignRight="@+id/switchOffButton"
+        android:layout_alignEnd="@+id/switchOffButton"
+        android:layout_alignLeft="@+id/switchOnButton"
+        android:layout_alignStart="@+id/switchOnButton" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Open the Gate"
+        android:id="@+id/openGateButton"
+        android:layout_above="@+id/switchOffButton"
+        android:layout_centerHorizontal="true" />
+</RelativeLayout>
