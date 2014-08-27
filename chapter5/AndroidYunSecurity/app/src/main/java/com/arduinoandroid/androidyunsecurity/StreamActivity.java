@@ -24,7 +24,7 @@ public class StreamActivity extends Activity {
         super.onCreate(savedInstanceState);
 
         //sample public cam
-        String URL = "http://trackfield.webcam.oregonstate.edu/axis-cgi/mjpg/video.cgi?resolution=800x600&amp%3bdummy=1333689998337";
+        String URL = "http://10.0.1.6:8080/?action=stream";
 
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
