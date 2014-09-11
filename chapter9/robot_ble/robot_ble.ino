@@ -86,33 +86,33 @@ void loop() {
 
 // Forward
 int forward(String command) {
-  
-  send_motor_command(speed_motor1,direction_motor1,100,1);
-  send_motor_command(speed_motor2,direction_motor2,100,1);
+
+  send_motor_command(speed_motor1,direction_motor1,200,1);
+  send_motor_command(speed_motor2,direction_motor2,200,1);
   return 1;
 }
 
 // Backward
 int backward(String command) {
   
-  send_motor_command(speed_motor1,direction_motor1,100,0);
-  send_motor_command(speed_motor2,direction_motor2,100,0);
+  send_motor_command(speed_motor1,direction_motor1,200,0);
+  send_motor_command(speed_motor2,direction_motor2,200,0);
   return 1;
 }
 
 // Left
 int left(String command) {
   
-  send_motor_command(speed_motor1,direction_motor1,75,0);
-  send_motor_command(speed_motor2,direction_motor2,75,1);
+  send_motor_command(speed_motor1,direction_motor1,150,0);
+  send_motor_command(speed_motor2,direction_motor2,150,1);
   return 1;
 }
 
 // Right
 int right(String command) {
   
-  send_motor_command(speed_motor1,direction_motor1,75,1);
-  send_motor_command(speed_motor2,direction_motor2,75,0);
+  send_motor_command(speed_motor1,direction_motor1,150,1);
+  send_motor_command(speed_motor2,direction_motor2,150,0);
   return 1;
 }
 
