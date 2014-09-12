@@ -11,8 +11,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Parcelable;
-import android.text.format.Time;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -21,9 +22,11 @@ import java.nio.charset.Charset;
 
 public class NFCActivity extends Activity {
 
-    //Declaring the variable for mStatusText as a TextView
+    //Declaring the User Interface Variables for mStatusText as a TextView
     private TextView mStatusText;
     private EditText messageToBeam;
+    private Button switchOn;
+    private Button switchOff;
 
     //Initializing the NFC Adapater for sending messages
     NfcAdapter mNfcAdapter;
@@ -44,22 +47,39 @@ public class NFCActivity extends Activity {
 
         mStatusText = (TextView) findViewById(R.id.nfcTextStatus);
         messageToBeam = (EditText) findViewById(R.id.sendView);
+        switchOn = (Button) findViewById(R.id.switchOnBtn);
+        switchOff = (Button) findViewById(R.id.switchOffBtn);
 
         // Check for available NFC Adapter
         mNfcAdapter = NfcAdapter.getDefaultAdapter(this);
         if (mNfcAdapter == null) {
             mStatusText.setText("NFC is not available on this device.");
+
+        // Adding OnClick Listeners to the Buttons
+        switchOn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mStatusText.setText(open_key);
+            }
+        });
+
+        switchOff.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mStatusText.setText(close_key);
+            }
+        });
+
+
         }
 
         // Register to create and NDEF message when another device is in range
         mNfcAdapter.setNdefPushMessageCallback(new NfcAdapter.CreateNdefMessageCallback() {
             @Override
             public NdefMessage createNdefMessage(NfcEvent event) {
-                Time time = new Time();
-                time.setToNow();
+                //the variable message is from the EditText field
                 String message = messageToBeam.getText().toString();
-                String text = (message + " \n[Sent @ "
-                        + time.format("%H:%M:%S") + "]");
+                String text = (message);
                 byte[] mime = MIMETYPE.getBytes(Charset.forName("US-ASCII"));
                 NdefRecord mimeMessage = new NdefRecord(
                         NdefRecord.TNF_MIME_MEDIA, mime, new byte[0], text
