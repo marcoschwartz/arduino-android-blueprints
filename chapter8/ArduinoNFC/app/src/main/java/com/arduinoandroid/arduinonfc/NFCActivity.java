@@ -14,7 +14,6 @@ import android.os.Parcelable;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import java.nio.charset.Charset;
@@ -24,7 +23,7 @@ public class NFCActivity extends Activity {
 
     //Declaring the User Interface Variables for mStatusText as a TextView
     private TextView mStatusText;
-    private EditText messageToBeam;
+    private TextView messageToBeam;
     private Button switchOn;
     private Button switchOff;
 
@@ -38,7 +37,7 @@ public class NFCActivity extends Activity {
     String close_key = "C19HNuqNU4";
 
     //Getting the name for Log Tags
-    private final String DEBUG_TAG = NFCActivity.class.getSimpleName();
+    private final String TAG = NFCActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,31 +45,29 @@ public class NFCActivity extends Activity {
         setContentView(R.layout.activity_nfc);
 
         mStatusText = (TextView) findViewById(R.id.nfcTextStatus);
-        messageToBeam = (EditText) findViewById(R.id.sendView);
+        messageToBeam = (TextView) findViewById(R.id.messageToBeam);
         switchOn = (Button) findViewById(R.id.switchOnBtn);
         switchOff = (Button) findViewById(R.id.switchOffBtn);
-
-        // Check for available NFC Adapter
-        mNfcAdapter = NfcAdapter.getDefaultAdapter(this);
-        if (mNfcAdapter == null) {
-            mStatusText.setText("NFC is not available on this device.");
 
         // Adding OnClick Listeners to the Buttons
         switchOn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mStatusText.setText(open_key);
+                messageToBeam.setText(open_key);
             }
         });
 
         switchOff.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mStatusText.setText(close_key);
+                messageToBeam.setText(close_key);
             }
         });
 
-
+        // Check for available NFC Adapter
+        mNfcAdapter = NfcAdapter.getDefaultAdapter(this);
+        if (mNfcAdapter == null) {
+            mStatusText.setText("NFC is not available on this device.");
         }
 
         // Register to create and NDEF message when another device is in range
@@ -85,10 +82,10 @@ public class NFCActivity extends Activity {
                         NdefRecord.TNF_MIME_MEDIA, mime, new byte[0], text
                         .getBytes());
                 NdefMessage msg = new NdefMessage(
-                        new NdefRecord[] {
+                        new NdefRecord[]{
                                 mimeMessage,
                                 NdefRecord
-                                        .createApplicationRecord("com.arduinoandroid.arduinonfc") });
+                                        .createApplicationRecord("com.arduinoandroid.arduinonfc")});
                 return msg;
             }
         }, this);
@@ -134,7 +131,7 @@ public class NFCActivity extends Activity {
                 String message = new String(firstPayload);
                 mStatusText.setText(message);
             } catch (Exception e) {
-                Log.e(DEBUG_TAG, "Error retrieving beam message.", e);
+                Log.e(TAG, "Error retrieving beam message.", e);
             }
         }
     }
@@ -144,7 +141,6 @@ public class NFCActivity extends Activity {
         // handle singleTop so we don't launch a bunch of instances..
         setIntent(intent);
     }
-
 }
 
 

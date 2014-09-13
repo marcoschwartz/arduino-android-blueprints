@@ -7,6 +7,9 @@
     <uses-feature
         android:name="android.hardware.nfc"
         android:required="true" />
+    <uses-feature
+        android:name="android.hardware.nfc.hce"
+        android:required="true" />
 
     <application
         android:allowBackup="true"

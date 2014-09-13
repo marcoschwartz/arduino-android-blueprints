@@ -17,14 +17,6 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" />
 
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/sendView"
-        android:layout_below="@+id/messageView"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="41dp" />
-
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -43,8 +35,7 @@
         android:layout_alignLeft="@+id/messageView"
         android:layout_alignStart="@+id/messageView"
         android:layout_marginTop="43dp"
-        android:layout_toLeftOf="@+id/sendView"
-        android:layout_toStartOf="@+id/sendView" />
+        android:layout_centerHorizontal="true" />
 
     <Button
         android:layout_width="wrap_content"
@@ -54,7 +45,15 @@
         android:layout_alignTop="@+id/switchOnBtn"
         android:layout_alignRight="@+id/messageView"
         android:layout_alignEnd="@+id/messageView"
-        android:layout_toRightOf="@+id/sendView"
-        android:layout_toEndOf="@+id/sendView" />
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="just some text"
+        android:id="@+id/messageToBeam"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
 
 </RelativeLayout>
