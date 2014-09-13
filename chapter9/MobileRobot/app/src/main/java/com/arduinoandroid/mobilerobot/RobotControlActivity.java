@@ -55,14 +55,14 @@ public class RobotControlActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_robot_control);
 
-        fwdBtn = (Button) findViewById(R.id.fwdButton);
+        fwdBtn = (Button) findViewById(R.id.fwdBtn);
         leftBtn = (Button) findViewById(R.id.leftBtn);
         rightBtn = (Button) findViewById(R.id.rightBtn);
         backBtn = (Button) findViewById(R.id.backwardBtn);
         stopBtn = (Button) findViewById(R.id.stopBtn);
         connectBtn = (Button) findViewById(R.id.connectBtn);
 
-        connectionSts = (TextView)findViewById(R.id.connectionStatusView);
+        connectionSts = (TextView)findViewById(R.id.connectionStsView);
 
         fwdBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -105,7 +105,7 @@ public class RobotControlActivity extends Activity {
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String setOutputMessage = "/back /";
+                String setOutputMessage = "/backward /";
                 tx.setValue(setOutputMessage.getBytes(Charset.forName("UTF-8")));
                 if (gatt.writeCharacteristic(tx)) {
                     writeSensorData("Sent: " + setOutputMessage);
@@ -130,7 +130,8 @@ public class RobotControlActivity extends Activity {
         connectBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                return;
+
+                restartScan();
             }
         });
 
