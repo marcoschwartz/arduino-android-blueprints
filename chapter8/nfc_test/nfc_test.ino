@@ -14,8 +14,8 @@ void setup(void) {
   Serial.begin(9600);
   
   // Start NFC chip
-  Serial.println("NFC shield started");
   nfc.begin();
+  Serial.println("NFC shield started");
 }
 
 void loop(void) {
