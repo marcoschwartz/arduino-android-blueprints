@@ -138,7 +138,7 @@ public class NFCActivity extends Activity {
 
     @Override
     public void onNewIntent(Intent intent) {
-        // handle singleTop so we don't launch a bunch of instances..
+        // handle singleTop so we don't launch a number of instances...
         setIntent(intent);
     }
 }
