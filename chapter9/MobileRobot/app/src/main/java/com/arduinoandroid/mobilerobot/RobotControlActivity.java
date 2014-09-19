@@ -71,9 +71,9 @@ public class RobotControlActivity extends Activity {
                 String setOutputMessage = "/forward /";
                 tx.setValue(setOutputMessage.getBytes(Charset.forName("UTF-8")));
                 if (gatt.writeCharacteristic(tx)) {
-                    writeSensorData("Sent: " + setOutputMessage);
+                    writeConnectionData("Sent: " + setOutputMessage);
                 } else {
-                    writeSensorData("Couldn't write TX characteristic!");
+                    writeConnectionData("Couldn't write TX characteristic!");
                 }
             }
         });
@@ -84,9 +84,9 @@ public class RobotControlActivity extends Activity {
                 String setOutputMessage = "/left /";
                 tx.setValue(setOutputMessage.getBytes(Charset.forName("UTF-8")));
                 if (gatt.writeCharacteristic(tx)) {
-                    writeSensorData("Sent: " + setOutputMessage);
+                    writeConnectionData("Sent: " + setOutputMessage);
                 } else {
-                    writeSensorData("Couldn't write TX characteristic!");
+                    writeConnectionData("Couldn't write TX characteristic!");
                 }
             }
         });
@@ -97,9 +97,9 @@ public class RobotControlActivity extends Activity {
                 String setOutputMessage = "/right /";
                 tx.setValue(setOutputMessage.getBytes(Charset.forName("UTF-8")));
                 if (gatt.writeCharacteristic(tx)) {
-                    writeSensorData("Sent: " + setOutputMessage);
+                    writeConnectionData("Sent: " + setOutputMessage);
                 } else {
-                    writeSensorData("Couldn't write TX characteristic!");
+                    writeConnectionData("Couldn't write TX characteristic!");
                 }
             }
         });
@@ -109,9 +109,9 @@ public class RobotControlActivity extends Activity {
                 String setOutputMessage = "/backward /";
                 tx.setValue(setOutputMessage.getBytes(Charset.forName("UTF-8")));
                 if (gatt.writeCharacteristic(tx)) {
-                    writeSensorData("Sent: " + setOutputMessage);
+                    writeConnectionData("Sent: " + setOutputMessage);
                 } else {
-                    writeSensorData("Couldn't write TX characteristic!");
+                    writeConnectionData("Couldn't write TX characteristic!");
                 }
             }
         });
@@ -121,9 +121,9 @@ public class RobotControlActivity extends Activity {
                 String setOutputMessage = "/stop /";
                 tx.setValue(setOutputMessage.getBytes(Charset.forName("UTF-8")));
                 if (gatt.writeCharacteristic(tx)) {
-                    writeSensorData("Sent: " + setOutputMessage);
+                    writeConnectionData("Sent: " + setOutputMessage);
                 } else {
-                    writeSensorData("Couldn't write TX characteristic!");
+                    writeConnectionData("Couldn't write TX characteristic!");
                 }
             }
         });
@@ -159,7 +159,7 @@ public class RobotControlActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void writeSensorData(final CharSequence text) {
+    private void writeConnectionData(final CharSequence text) {
         Log.e(LOG_TAG, text.toString());
         connectionSts.setText(text.toString());
     }
@@ -173,15 +173,15 @@ public class RobotControlActivity extends Activity {
         public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
             super.onConnectionStateChange(gatt, status, newState);
             if (newState == BluetoothGatt.STATE_CONNECTED) {
-                writeSensorData("Connected!");
+                writeConnectionData("Connected!");
                 // Discover services.
                 if (!gatt.discoverServices()) {
-                    writeSensorData("Failed to start discovering services!");
+                    writeConnectionData("Failed to start discovering services!");
                 }
             } else if (newState == BluetoothGatt.STATE_DISCONNECTED) {
-                writeSensorData("Disconnected!");
+                writeConnectionData("Disconnected!");
             } else {
-                writeSensorData("Connection state changed.  New state: " + newState);
+                writeConnectionData("Connection state changed.  New state: " + newState);
             }
         }
 
@@ -191,9 +191,9 @@ public class RobotControlActivity extends Activity {
         public void onServicesDiscovered(BluetoothGatt gatt, int status) {
             super.onServicesDiscovered(gatt, status);
             if (status == BluetoothGatt.GATT_SUCCESS) {
-                writeSensorData("Service discovery completed!");
+                writeConnectionData("Service discovery completed!");
             } else {
-                writeSensorData("Service discovery failed with status: " + status);
+                writeConnectionData("Service discovery failed with status: " + status);
             }
             // Save reference to each characteristic.
             tx = gatt.getService(UART_UUID).getCharacteristic(TX_UUID);
@@ -202,7 +202,7 @@ public class RobotControlActivity extends Activity {
             // Setup notifications on RX characteristic changes (i.e. data received).
             // First call setCharacteristicNotification to enable notification.
             if (!gatt.setCharacteristicNotification(rx, true)) {
-                writeSensorData("Couldn't set notifications for RX characteristic!");
+                writeConnectionData("Couldn't set notifications for RX characteristic!");
             }
 
             // Next update the RX characteristic's client descriptor to enable notifications.
@@ -210,10 +210,10 @@ public class RobotControlActivity extends Activity {
                 BluetoothGattDescriptor desc = rx.getDescriptor(CLIENT_UUID);
                 desc.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
                 if (!gatt.writeDescriptor(desc)) {
-                    writeSensorData("Couldn't write RX client descriptor value!");
+                    writeConnectionData("Couldn't write RX client descriptor value!");
                 }
             } else {
-                writeSensorData("Couldn't get RX client descriptor!");
+                writeConnectionData("Couldn't get RX client descriptor!");
             }
             areServicesAccessible = true;
         }
@@ -251,7 +251,7 @@ public class RobotControlActivity extends Activity {
         if (!adapter.isDiscovering()) {
             adapter.startDiscovery();
         }
-        writeSensorData("Scanning for devices...");
+        writeConnectionData("Scanning for devices...");
         adapter.startLeScan(scanCallback);
     }
 
@@ -259,7 +259,7 @@ public class RobotControlActivity extends Activity {
         if (adapter.isDiscovering()) {
             adapter.cancelDiscovery();
         }
-        writeSensorData("Stopping scan");
+        writeConnectionData("Stopping scan");
         adapter.stopLeScan(scanCallback);
     }
 
@@ -277,13 +277,13 @@ public class RobotControlActivity extends Activity {
         public void onLeScan(BluetoothDevice bluetoothDevice, int i, byte[] bytes) {
             Log.d(LOG_TAG, bluetoothDevice.getAddress());
 
-            writeSensorData("Found device: " + bluetoothDevice.getAddress());
+            writeConnectionData("Found device: " + bluetoothDevice.getAddress());
 
             // Check if the device has the UART service.
             if (BluetoothUtils.parseUUIDs(bytes).contains(UART_UUID)) {
                 // Found a device, stop the scan.
                 adapter.stopLeScan(scanCallback);
-                writeSensorData("Found UART service!");
+                writeConnectionData("Found UART service!");
                 // Connect to the device.
                 // Control flow will now go to the bluetoothGattCallback functions when BTLE events occur.
                 gatt = bluetoothDevice.connectGatt(getApplicationContext(), false, bluetoothGattCallback);
