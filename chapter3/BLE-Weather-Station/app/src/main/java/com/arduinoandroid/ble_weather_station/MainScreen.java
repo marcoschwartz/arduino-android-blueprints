@@ -251,7 +251,6 @@ public class MainScreen extends Activity {
                 Log.e(LOG_TAG,text.toString());
                 output=text.toString().trim();
                 if (output.length() > 0 && output.length() <=3) {
-
                     dataOutput.setText(output);
                 }
                 else {

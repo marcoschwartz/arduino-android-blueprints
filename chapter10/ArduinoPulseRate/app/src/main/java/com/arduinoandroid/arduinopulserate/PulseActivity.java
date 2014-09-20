@@ -1,4 +1,4 @@
-package com.arduinoandroid.mobilerobot;
+package com.arduinoandroid.arduinopulserate;
 
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
@@ -13,27 +13,31 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.arduinoandroid.mobilerobot.Bluetooth.BluetoothUtils;
+import com.arduinoandroid.arduinopulserate.Bluetooth.BluetoothUtils;
+import com.jjoe64.graphview.GraphView;
+import com.jjoe64.graphview.GraphViewSeries;
+import com.jjoe64.graphview.LineGraphView;
 
 import java.nio.charset.Charset;
 import java.util.UUID;
 
 
-public class RobotControlActivity extends Activity {
-
-    //User Interface Elements
-    Button fwdBtn;
-    Button leftBtn;
-    Button rightBtn;
-    Button backBtn;
-    Button stopBtn;
-    Button connectBtn;
-    TextView connectionSts;
+public class PulseActivity extends Activity {
 
     //Logging Variables
-    private final String LOG_TAG = RobotControlActivity.class.getSimpleName();
+    private final String LOG_TAG = PulseActivity.class.getSimpleName();
+
+    //User Interface Variables
+    Button getPulseRate;
+    Button refreshButton;
+    TextView pulseRateView;
+    TextView connectionStsView;
+
+    //Data Output
+    private String output;
 
     // UUIDs for UAT service and associated characteristics.
     public static UUID UART_UUID = UUID.fromString("6E400001-B5A3-F393-E0A9-E50E24DCCA9E");
@@ -49,26 +53,50 @@ public class RobotControlActivity extends Activity {
     private BluetoothGattCharacteristic tx;
     private BluetoothGattCharacteristic rx;
 
+    //Graph Values
+    //GraphView
+    static LinearLayout GraphView;
+    static com.jjoe64.graphview.GraphView graphView;
+    static GraphViewSeries rateSeries;
+    static boolean AutoScrollX;
+    private static double graph2LastXValue = 0;
+    private static int maxDataCount = 250;
+
     private boolean areServicesAccessible = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_robot_control);
+        setContentView(R.layout.activity_pulse);
 
-        fwdBtn = (Button) findViewById(R.id.fwdBtn);
-        leftBtn = (Button) findViewById(R.id.leftBtn);
-        rightBtn = (Button) findViewById(R.id.rightBtn);
-        backBtn = (Button) findViewById(R.id.backwardBtn);
-        stopBtn = (Button) findViewById(R.id.stopBtn);
-        connectBtn = (Button) findViewById(R.id.connectBtn);
+        //Connect U.I Elements
+        getPulseRate = (Button)findViewById(R.id.heartRateBtn);
+        pulseRateView = (TextView) findViewById(R.id.pulseValueView);
+        connectionStsView = (TextView) findViewById(R.id.connectionStsView);
+        refreshButton = (Button) findViewById(R.id.refreshBtn);
 
-        connectionSts = (TextView)findViewById(R.id.connectionStsView);
+        // init heart rate series data
+        rateSeries = new GraphViewSeries(new GraphView.GraphViewData[] {
+                new GraphView.GraphViewData(1, 2.0d)
+                , new GraphView.GraphViewData(2, 1.5d)
+                , new GraphView.GraphViewData(3, 2.5d)
+                , new GraphView.GraphViewData(4, 1.0d)
+        });
 
-        fwdBtn.setOnClickListener(new View.OnClickListener() {
+        GraphView graphView = new LineGraphView(
+                this // context
+                ,"Pulse Rate Sensor" // heading
+        );
+
+        graphView.addSeries(rateSeries); // data
+
+        LinearLayout layout = (LinearLayout) findViewById(R.id.graph1);
+        layout.addView(graphView);
+
+        getPulseRate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String setOutputMessage = "/forward /";
+                String setOutputMessage = "/bpm /";
                 tx.setValue(setOutputMessage.getBytes(Charset.forName("UTF-8")));
                 if (gatt.writeCharacteristic(tx)) {
                     writeConnectionData("Sent: " + setOutputMessage);
@@ -78,60 +106,9 @@ public class RobotControlActivity extends Activity {
             }
         });
 
-        leftBtn.setOnClickListener(new View.OnClickListener() {
+        refreshButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String setOutputMessage = "/left /";
-                tx.setValue(setOutputMessage.getBytes(Charset.forName("UTF-8")));
-                if (gatt.writeCharacteristic(tx)) {
-                    writeConnectionData("Sent: " + setOutputMessage);
-                } else {
-                    writeConnectionData("Couldn't write TX characteristic!");
-                }
-            }
-        });
-
-        rightBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String setOutputMessage = "/right /";
-                tx.setValue(setOutputMessage.getBytes(Charset.forName("UTF-8")));
-                if (gatt.writeCharacteristic(tx)) {
-                    writeConnectionData("Sent: " + setOutputMessage);
-                } else {
-                    writeConnectionData("Couldn't write TX characteristic!");
-                }
-            }
-        });
-        backBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String setOutputMessage = "/backward /";
-                tx.setValue(setOutputMessage.getBytes(Charset.forName("UTF-8")));
-                if (gatt.writeCharacteristic(tx)) {
-                    writeConnectionData("Sent: " + setOutputMessage);
-                } else {
-                    writeConnectionData("Couldn't write TX characteristic!");
-                }
-            }
-        });
-        stopBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String setOutputMessage = "/stop /";
-                tx.setValue(setOutputMessage.getBytes(Charset.forName("UTF-8")));
-                if (gatt.writeCharacteristic(tx)) {
-                    writeConnectionData("Sent: " + setOutputMessage);
-                } else {
-                    writeConnectionData("Couldn't write TX characteristic!");
-                }
-            }
-        });
-
-        connectBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
                 restartScan();
             }
         });
@@ -141,7 +118,7 @@ public class RobotControlActivity extends Activity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.robot_control, menu);
+        getMenuInflater().inflate(R.menu.pulse, menu);
         return true;
     }
 
@@ -159,7 +136,28 @@ public class RobotControlActivity extends Activity {
 
     private void writeConnectionData(final CharSequence text) {
         Log.e(LOG_TAG, text.toString());
-        connectionSts.setText(text.toString());
+        connectionStsView.setText(text.toString());
+    }
+
+
+
+    //Implement Method Below to output temperature/humidity/light readings to dataOutputView
+    private void writeSensorData(final CharSequence text) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Log.e(LOG_TAG,text.toString());
+                output=text.toString().trim();
+
+                if (output.length() > 0 && output.length() <=3) {
+                    pulseRateView.setText(output);
+                    //rateSeries.appendData(new GraphView.GraphViewData(graph2LastXValue,Double.parseDouble(output)),AutoScrollX,maxDataCount);
+                }
+                else {
+                    return;
+                }
+            }
+        });
     }
 
     // BTLE device scanning bluetoothGattCallback.
@@ -214,6 +212,12 @@ public class RobotControlActivity extends Activity {
                 writeConnectionData("Couldn't get RX client descriptor!");
             }
             areServicesAccessible = true;
+        }
+        // Called when a remote characteristic changes (like the RX characteristic).
+        @Override
+        public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
+            super.onCharacteristicChanged(gatt, characteristic);
+            writeSensorData(characteristic.getStringValue(0));
         }
     };
 
@@ -289,4 +293,3 @@ public class RobotControlActivity extends Activity {
         }
     };
 }
-
