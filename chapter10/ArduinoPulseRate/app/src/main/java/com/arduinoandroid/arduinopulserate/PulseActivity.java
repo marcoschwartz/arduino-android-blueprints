@@ -102,9 +102,9 @@ public class PulseActivity extends Activity {
         });
 
         graphView.addSeries(rateSeries);
-
-
-
+        graphView.setScrollable(true);
+        graphView.setScalable(true);
+        
         LinearLayout layout = (LinearLayout) findViewById(R.id.graph1);
         layout.addView(graphView);
 
