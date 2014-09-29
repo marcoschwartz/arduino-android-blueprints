@@ -9,14 +9,13 @@ import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattDescriptor;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.arduinoandroid.arduinopulserate.Bluetooth.BluetoothUtils;
+import com.jjoe64.graphview.CustomLabelFormatter;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.GraphViewSeries;
 import com.jjoe64.graphview.LineGraphView;
@@ -64,6 +63,7 @@ public class PulseActivity extends Activity {
 
     private boolean areServicesAccessible = false;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,18 +77,33 @@ public class PulseActivity extends Activity {
 
         // init heart rate series data
         rateSeries = new GraphViewSeries(new GraphView.GraphViewData[] {
-                new GraphView.GraphViewData(1, 2.0d)
-                , new GraphView.GraphViewData(2, 1.5d)
-                , new GraphView.GraphViewData(3, 2.5d)
-                , new GraphView.GraphViewData(4, 1.0d)
         });
 
         GraphView graphView = new LineGraphView(
                 this // context
                 ,"Pulse Rate Sensor" // heading
         );
+        graphView.setCustomLabelFormatter(new CustomLabelFormatter() {
+            @Override
+            public String formatLabel(double value, boolean isValueX) {
+                if (isValueX) {
+                    return null;
+                }
+                else {
+                    if (value < 60) {
+                        return "low";
+                    } else if (value < 100) {
+                        return "normal";
+                    } else {
+                        return "high";
+                    }
+                }
+            }
+        });
 
-        graphView.addSeries(rateSeries); // data
+        graphView.addSeries(rateSeries);
+
+
 
         LinearLayout layout = (LinearLayout) findViewById(R.id.graph1);
         layout.addView(graphView);
@@ -114,32 +129,10 @@ public class PulseActivity extends Activity {
         });
     }
 
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.pulse, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
     private void writeConnectionData(final CharSequence text) {
         Log.e(LOG_TAG, text.toString());
         connectionStsView.setText(text.toString());
     }
-
-
 
     //Implement Method Below to output temperature/humidity/light readings to dataOutputView
     private void writeSensorData(final CharSequence text) {
@@ -151,7 +144,7 @@ public class PulseActivity extends Activity {
 
                 if (output.length() > 0 && output.length() <=3) {
                     pulseRateView.setText(output);
-                    //rateSeries.appendData(new GraphView.GraphViewData(graph2LastXValue,Double.parseDouble(output)),AutoScrollX,maxDataCount);
+                    rateSeries.appendData(new GraphView.GraphViewData(graph2LastXValue,Double.parseDouble(output)),AutoScrollX,maxDataCount);
                 }
                 else {
                     return;
