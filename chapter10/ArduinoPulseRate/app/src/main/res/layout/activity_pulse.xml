@@ -34,7 +34,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Get Heart Rate"
+        android:text="Get Pulse Rate"
         android:id="@+id/heartRateBtn"
         android:layout_gravity="center_horizontal" />
 

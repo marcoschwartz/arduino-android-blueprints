@@ -87,7 +87,7 @@ public class PulseActivity extends Activity {
         connectionStsView.setText(text.toString());
     }
 
-    //Implement Method Below to output temperature/humidity/light readings to dataOutputView
+    //Implement Method Below to output pulse rate sensor readings to pulseRateView TextView
     private void writeSensorData(final CharSequence text) {
         runOnUiThread(new Runnable() {
             @Override
