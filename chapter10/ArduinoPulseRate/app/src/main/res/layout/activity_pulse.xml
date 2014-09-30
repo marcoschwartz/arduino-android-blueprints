@@ -1,61 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent">
 
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content">
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="fill_parent"
-            android:layout_height="250dip"
-            android:id="@+id/graph1" />
+        android:layout_height="250dip"
+        android:id="@+id/graph1"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp" />
 
-<LinearLayout
-            android:id="@+id/rest"
-            android:layout_width="fill_parent"
-            android:layout_height="250dip"
-            android:orientation="vertical" >
+    <LinearLayout
+        android:id="@+id/rest"
+        android:layout_width="fill_parent"
+        android:layout_height="250dip"
+        android:orientation="vertical">
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Refresh Connection"
-        android:id="@+id/refreshBtn"
-        android:layout_gravity="center_horizontal" />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Refresh Connection"
+            android:id="@+id/refreshBtn"
+            android:layout_gravity="center_horizontal" />
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Get Heart Rate"
-        android:id="@+id/heartRateBtn"
-        android:layout_gravity="center_horizontal" />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Get Heart Rate"
+            android:id="@+id/heartRateBtn"
+            android:layout_gravity="center_horizontal" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Last Pulse Rate Value"
-        android:id="@+id/pulsePlaceholderText"
-        android:layout_gravity="center_horizontal" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Last Pulse Rate Value"
+            android:id="@+id/pulsePlaceholderText"
+            android:layout_gravity="center_horizontal" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Large Text"
-        android:id="@+id/pulseValueView"
-        android:layout_gravity="center_horizontal" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Large Text"
+            android:id="@+id/pulseValueView"
+            android:layout_gravity="center_horizontal" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Connection Status"
-        android:id="@+id/connectionStsView"
-        android:layout_gravity="center_horizontal" />
-</LinearLayout>
-
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Connection Status"
+            android:id="@+id/connectionStsView"
+            android:layout_gravity="center_horizontal" />
     </LinearLayout>
-</ScrollView>
+
+</LinearLayout>

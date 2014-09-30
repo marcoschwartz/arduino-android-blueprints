@@ -64,32 +64,33 @@ public class PulseActivity extends Activity {
     private boolean areServicesAccessible = false;
 
 
+    // Local variable for simulating the sample time
+    private int x = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pulse);
 
         //Connect U.I Elements
-        getPulseRate = (Button)findViewById(R.id.heartRateBtn);
+        getPulseRate = (Button) findViewById(R.id.heartRateBtn);
         pulseRateView = (TextView) findViewById(R.id.pulseValueView);
         connectionStsView = (TextView) findViewById(R.id.connectionStsView);
         refreshButton = (Button) findViewById(R.id.refreshBtn);
 
-        // init heart rate series data
-        rateSeries = new GraphViewSeries(new GraphView.GraphViewData[] {
-        });
-
-        GraphView graphView = new LineGraphView(
-                this // context
-                ,"Pulse Rate Sensor" // heading
+        final GraphView graphView = new LineGraphView(
+                this, // context
+                "Pulse Rate Sensor" // heading
         );
+
+        graphView.setVerticalLabels(new String[]{"high", "normal", "low"});
+
         graphView.setCustomLabelFormatter(new CustomLabelFormatter() {
             @Override
             public String formatLabel(double value, boolean isValueX) {
                 if (isValueX) {
                     return null;
-                }
-                else {
+                } else {
                     if (value < 60) {
                         return "low";
                     } else if (value < 100) {
@@ -101,10 +102,11 @@ public class PulseActivity extends Activity {
             }
         });
 
+        // init heart rate series data
+        rateSeries = new GraphViewSeries(new GraphView.GraphViewData[]{
+        });
         graphView.addSeries(rateSeries);
-        graphView.setScrollable(true);
-        graphView.setScalable(true);
-        
+
         LinearLayout layout = (LinearLayout) findViewById(R.id.graph1);
         layout.addView(graphView);
 
@@ -144,7 +146,8 @@ public class PulseActivity extends Activity {
 
                 if (output.length() > 0 && output.length() <=3) {
                     pulseRateView.setText(output);
-                    rateSeries.appendData(new GraphView.GraphViewData(graph2LastXValue,Double.parseDouble(output)),AutoScrollX,maxDataCount);
+                    rateSeries.appendData(new GraphView.GraphViewData(x += 3, Double.parseDouble(output)), false, 100);
+                    graphView.redrawAll();
                 }
                 else {
                     return;
