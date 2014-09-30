@@ -11,14 +11,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.arduinoandroid.arduinopulserate.Bluetooth.BluetoothUtils;
-import com.jjoe64.graphview.CustomLabelFormatter;
-import com.jjoe64.graphview.GraphView;
-import com.jjoe64.graphview.GraphViewSeries;
-import com.jjoe64.graphview.LineGraphView;
 
 import java.nio.charset.Charset;
 import java.util.UUID;
@@ -52,20 +47,7 @@ public class PulseActivity extends Activity {
     private BluetoothGattCharacteristic tx;
     private BluetoothGattCharacteristic rx;
 
-    //Graph Values
-    //GraphView
-    static LinearLayout GraphView;
-    static com.jjoe64.graphview.GraphView graphView;
-    static GraphViewSeries rateSeries;
-    static boolean AutoScrollX;
-    private static double graph2LastXValue = 0;
-    private static int maxDataCount = 250;
-
     private boolean areServicesAccessible = false;
-
-
-    // Local variable for simulating the sample time
-    private int x = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,37 +60,6 @@ public class PulseActivity extends Activity {
         connectionStsView = (TextView) findViewById(R.id.connectionStsView);
         refreshButton = (Button) findViewById(R.id.refreshBtn);
 
-        final GraphView graphView = new LineGraphView(
-                this, // context
-                "Pulse Rate Sensor" // heading
-        );
-
-        graphView.setVerticalLabels(new String[]{"high", "normal", "low"});
-
-        graphView.setCustomLabelFormatter(new CustomLabelFormatter() {
-            @Override
-            public String formatLabel(double value, boolean isValueX) {
-                if (isValueX) {
-                    return null;
-                } else {
-                    if (value < 60) {
-                        return "low";
-                    } else if (value < 100) {
-                        return "normal";
-                    } else {
-                        return "high";
-                    }
-                }
-            }
-        });
-
-        // init heart rate series data
-        rateSeries = new GraphViewSeries(new GraphView.GraphViewData[]{
-        });
-        graphView.addSeries(rateSeries);
-
-        LinearLayout layout = (LinearLayout) findViewById(R.id.graph1);
-        layout.addView(graphView);
 
         getPulseRate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -146,8 +97,6 @@ public class PulseActivity extends Activity {
 
                 if (output.length() > 0 && output.length() <=3) {
                     pulseRateView.setText(output);
-                    rateSeries.appendData(new GraphView.GraphViewData(x += 3, Double.parseDouble(output)), false, 100);
-                    graphView.redrawAll();
                 }
                 else {
                     return;
