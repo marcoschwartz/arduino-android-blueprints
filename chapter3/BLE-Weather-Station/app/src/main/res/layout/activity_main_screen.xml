@@ -62,7 +62,7 @@
 
         <TextView
             android:layout_width="match_parent"
-            android:layout_height="250dp"
+            android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:id="@+id/dataOutputTextView"
             android:layout_gravity="center_vertical"
