@@ -34,6 +34,8 @@ public class MainScreen extends Activity {
 
     final Activity activity = this;
 
+    public static final String URL = "192.168.1.3";
+
     //Main Thread
 
     @Override
@@ -102,7 +104,7 @@ public class MainScreen extends Activity {
             int responseCode = -1;
 
             try {
-                URL restApiUrl = new URL("http://192.168.1.3/mode/7/o");
+                URL restApiUrl = new URL("http://" + URL + "/mode/7/o");
                 HttpURLConnection connection = (HttpURLConnection) restApiUrl.openConnection();
                 connection.connect();
 
@@ -134,7 +136,7 @@ public class MainScreen extends Activity {
             int responseCode = -1;
 
             try {
-                URL restApiUrl = new URL("http://169.254.153.4/digital/7/1");
+                URL restApiUrl = new URL("http://" + URL + "/digital/7/1");
                 HttpURLConnection connection = (HttpURLConnection) restApiUrl.openConnection();
                 connection.connect();
 
@@ -166,7 +168,7 @@ public class MainScreen extends Activity {
             int responseCode = -1;
 
             try {
-                URL restApiUrl = new URL("http://169.254.153.4/digital/7/0");
+                URL restApiUrl = new URL("http://" + URL + "/digital/7/0");
                 HttpURLConnection connection = (HttpURLConnection) restApiUrl.openConnection();
                 connection.connect();
 
@@ -199,7 +201,7 @@ public class MainScreen extends Activity {
             String result = null;
 
             try {
-                URL restApiUrl = new URL("http://169.254.153.4/power");
+                URL restApiUrl = new URL("http://" + URL + "/power");
                 HttpURLConnection connection = (HttpURLConnection) restApiUrl.openConnection();
                 connection.connect();
                 responseCode = connection.getResponseCode();
@@ -207,7 +209,7 @@ public class MainScreen extends Activity {
                 InputStream is = null;
                 //http post
                 try{
-                    String postQuery = "http://169.254.153.4/power";
+                    String postQuery = "http://" + URL + "/power";
                     HttpClient httpclient = new DefaultHttpClient();
                     HttpPost httppost = new HttpPost(postQuery);
                     HttpResponse response = httpclient.execute(httppost);
